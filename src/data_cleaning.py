@@ -40,5 +40,12 @@ df['parkingCountIndoor'] = df['parkingCountIndoor'].fillna(0)
 # cast from float to str
 df['postalCode'] = df['postalCode'].astype(str)
 
+IQR = df['price'].quantile(0.75) - df['price'].quantile(0.25)
+
+upper_limit = df['price'].quantile(0.75) + 1.5 * IQR
+lower_limit = df['price'].quantile(0.25) - 1.5 * IQR
+
+df = df[(df['price'] < upper_limit) & (df['price'] > lower_limit)]
+
 clean_data_path = Path.cwd() / "data" / "clean" / "clean_data.csv"
 df.to_csv(clean_data_path, index=False)
