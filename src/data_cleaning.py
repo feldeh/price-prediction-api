@@ -20,6 +20,7 @@ def data_cleaner(df):
     df['number'].replace(r'^[.,-]+$', np.nan, regex=True, inplace=True)
     # remove trailing [.,-] characters
     df['number'].replace(r'[.,-]+$', '', regex=True, inplace=True)
+
     # drop duplicate rows
     df.drop_duplicates(subset=['latitude', 'longitude', 'price', 'street', 'postalCode', 'number'], inplace=True)
 
@@ -45,6 +46,7 @@ def data_cleaner(df):
                    'bookmarkCount',
                    'viewCount',
                    'locality',
+                   'facadeCount'
                    ]
     df.drop(col_to_drop, axis=1, inplace=True)
 
@@ -53,15 +55,9 @@ def data_cleaner(df):
 
     df.drop(df[(df['type'] == 'APARTMENT_GROUP') | (df['type'] == 'HOUSE_GROUP')].index, inplace=True)
 
-    # 'kitchen'
-    df.loc[(df['kitchen'] == 'HYPER_EQUIPPED') | (df['kitchen'] == 'USA_HYPER_EQUIPPED') | (df['kitchen'] == 'USA_INSTALLED')] = 'SUPER_EQUIPPED'
-    df.loc[df['kitchen'] == 'USA_SEMI_EQUIPPED'] = 'SEMI_EQUIPPED'
-    df.loc[df['kitchen'] == 'USA_INSTALLED'] = 'INSTALLED'
-    df.loc[df['kitchen'] == 'USA_UNINSTALLED'] = 'NOT_INSTALLED'
-
     # cast from float to str
     float_col = ['postalCode', 'constructionYear']
-    df[float_col] = df[float_col].astype(str)
+    df[float_col] = df[float_col].convert_dtypes().astype('Int64').astype('str')
 
     # data imputation
     bool_col = ['hasGarden', 'hasTerrace', 'hasSwimmingPool', 'hasAirConditioning', 'hasLift', 'hasDoubleGlazing']
@@ -70,16 +66,18 @@ def data_cleaner(df):
     num_col = ['terraceSurface', 'gardenSurface', 'parkingCountIndoor', 'bathroomCount', 'showerRoomCount', 'bedroomCount']
     df[num_col] = df[num_col].fillna(0)
 
-    obj_col = ['constructionYear', 'heatingType', 'condition']
+    obj_col = ['heatingType', 'condition', 'kitchen']
     df[obj_col] = df[obj_col].fillna('no_info')
 
     df['saleType'] = df['saleType'].fillna('normalSale')
 
     df['subtype'] = df['subtype'].fillna(df['type'])
 
-    # cast from float to str
-    float_col = ['postalCode', 'constructionYear']
-    df[float_col] = df[float_col].astype(str)
+    # data recoding
+    df.loc[(df['kitchen'] == 'HYPER_EQUIPPED') | (df['kitchen'] == 'USA_HYPER_EQUIPPED'), 'kitchen'] = 'SUPER_EQUIPPED'
+    df.loc[df['kitchen'] == 'USA_SEMI_EQUIPPED', 'kitchen'] = 'SEMI_EQUIPPED'
+    df.loc[df['kitchen'] == 'USA_INSTALLED', 'kitchen'] = 'INSTALLED'
+    df.loc[df['kitchen'] == 'USA_UNINSTALLED', 'kitchen'] = 'NOT_INSTALLED'
 
     return df
 
