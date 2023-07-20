@@ -1,29 +1,24 @@
-# Belgian Real Estate - Data Analysis / Visualisation
+# Belgian Real Estate - Machine Learning Project
 
 ## Project description
 
-This is the second stage of a larger project to create a Machine Learning (ML) model to predict sale prices of real estate properties in Belgium. The first stage of the project which consisted on building the dataset using a scraper can be viewed [here](https://github.com/feldeh/immoweb-scraper).
+This is the third stage of a larger project to create a Machine Learning (ML) model to predict sale prices of real estate properties in Belgium. The first stage of the project, which consisted of building the dataset using a scraper. The second stage involved data cleaning and analysis.
+
+In this stage, we are going to implement two types of machine learning models to predict property prices. These models are Linear Regression and XGBoost.
 
 ## Objective
 
-The main objective is to use our dataset to analyse the Belgian real estate market to find patterns and relationships in our data. In order to achieve that we will be using the [**pandas**](https://pandas.pydata.org/) python library for data manipulation and the [**seaborn**](https://seaborn.pydata.org/) library for data visualisation.
+The main objective is to use our cleaned dataset to train machine learning models that can accurately predict the sale prices of real estate properties in Belgium.
 
-### Data Cleaning
+## Methodology
 
-The first step was to clean the dataset in order to improve the accurancy of our analysis.
+1. **Data Splitting**: We split the data into training and testing datasets for model evaluation. We also split the data based on the type of property (House or Apartment).
 
-The data cleaning process involved the following:
+2. **Feature Scaling**: We scale the features in the dataset using a MinMaxScaler to ensure that all features have the same scale. This improves the performance of our models.
 
-- Removing parameters that were irrelevant, contained constant value or had a small sample size.
-- Removing rows that contained missing values on the most important parameters such as `price` or `netHabitableSurface`.
-- Removing duplicates based on matching `latitude`, `longitude`, `price`, `street`, `postalCode` and `number`.
-- Imputing missing values to False for certain parameters such as `hasGarden`.
+3. **Model Training**: We train a Linear Regression model and an XGBoost model on the training data.
 
-The raw dataset contained 19980 rows and 52 columns, which was reduced to 15872 rows and 38 columns after the cleaning.
-
-### Data Analysis
-
-This part was centered around exploring the dataset by visualising the `price` correlations and the `price` distribution accross the different regions of Belgium after removing outliers. The visualisations and their interpretations can be consulted in [notebooks/data_analysis.ipynb](https://github.com/feldeh/immoweb-data-analysis/blob/main/notebooks/data_analysis.ipynb)
+4. **Model Evaluation**: We evaluate the performance of our models on the testing data using Mean Squared Error (MSE) and model score (R^2).
 
 ## Installation
 
@@ -35,6 +30,6 @@ If you wish to manipulate the dataset and play around with the notebook follow t
 
 ## Timeline
 
-This project lasted 4 days, starting from the 06/07/2023 and ending on the 11/07/2023.
+This project lasted 4 days, starting from the 17/07/2023 and ending on the 20/07/2023.
 
 It was completed by [Félicien De Hertogh](https://www.linkedin.com/in/feliciendehertogh/) as part of the Data and AI training at [BeCode.org](https://becode.org/) under the supervision of [Vanessa Rivera Quiñones](https://www.linkedin.com/in/vriveraq/) and [Samuel Borms](https://www.linkedin.com/in/sam-borms/?originalSubdomain=be).
