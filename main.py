@@ -10,8 +10,8 @@ def main():
     df = pd.read_csv(raw_data_path)
     clean_df = clean_data(df)
     df_h, df_a = split_house_apartment(clean_df)
-    main_linear(df, df_h, df_a)
-    main_xgb(df, df_h, df_a)
+    main_linear(clean_df, df_h, df_a)
+    main_xgb(clean_df, df_h, df_a)
 
 
 if __name__ == "__main__":
