@@ -27,6 +27,7 @@ If you wish to manipulate the dataset and play around with the notebook follow t
 1. Clone the [immoweb-data-analysis](https://github.com/feldeh/immoweb-data-analysis) repository
 2. Navigate to the root of the repository
 3. Install the required libraries by running `pip install -r requirements.txt`
+4. Run `python main.py`
 
 ## Timeline
 
