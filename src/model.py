@@ -8,6 +8,7 @@ from random import *
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from sklearn.preprocessing import OneHotEncoder
 
 
 def split_house_apartment(df):
@@ -17,6 +18,25 @@ def split_house_apartment(df):
     df_a = df_a.drop('type', axis=1)
 
     return df_h, df_a
+
+
+def encode_categorical_columns(df):
+
+    encoder = OneHotEncoder()
+    categorical_col = df.select_dtypes(include=['object']).columns
+
+    # fit and transform the categorical data into a sparse matrix
+    encoded_data = encoder.fit_transform(df[categorical_col])
+
+    # convert into a dense array
+    encoded_array = encoded_data.toarray()
+
+    encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(categorical_col))
+
+    df = df.drop(columns=categorical_col)
+    df_encoded = pd.concat([df.reset_index(drop=True), encoded_df], axis=1)
+
+    return df_encoded
 
 
 def split_train_test(df, random_state):
@@ -46,20 +66,10 @@ def regression_train_eval(X_train, X_test, y_train, y_test, prop_type):
     model.fit(scaled_X_train, y_train)
     y_pred = model.predict(X_test)
 
-    # weights associated with each features
-    # print("Coefficients: \n", model.coef_)
-
     print(f'    LINEAR REGRESSION {prop_type} model:')
     print("        Mean squared error: %.2f" % mean_squared_error(y_test, y_pred))
     print("        Training score: %.2f" % model.score(scaled_X_train, y_train))
     print("        Test score: %.2f" % model.score(scaled_X_test, y_test))
-
-    # plt.scatter(y_test, y_pred, color="black")
-    # plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color="blue")
-    # plt.title(f'{prop_type}')
-    # plt.xlabel("Actual Price")
-    # plt.ylabel("Predicted Price")
-    # plt.show()
 
 
 def linear_reg(df, prop_type, random_state):
@@ -74,9 +84,9 @@ def main_linear(df, df_h, df_a):
     df_h = df_h[linear_reg_features]
     df = df[linear_reg_features]
 
-    df_a = pd.get_dummies(df_a)
-    df_h = pd.get_dummies(df_h)
-    df = pd.get_dummies(df)
+    df_a = encode_categorical_columns(df_a)
+    df_h = encode_categorical_columns(df_h)
+    df = encode_categorical_columns(df)
     random_state = randint(1, 1000)
     print(f'RANDOM STATE: {random_state}')
     linear_reg(df, 'FULL dataset', random_state)
@@ -98,13 +108,6 @@ def xgb_train_eval(X_train, X_test, y_train, y_test, prop_type):
     print("        Training score: %.2f" % model.score(scaled_X_train, y_train))
     print("        Test score: %.2f" % model.score(scaled_X_test, y_test))
 
-    # plt.scatter(y_test, y_pred, color="black")
-    # plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color="blue")
-    # plt.title(f'{prop_type}')
-    # plt.xlabel("Actual Price")
-    # plt.ylabel("Predicted Price")
-    # plt.show()
-
 
 def xgb_reg(df, prop_type, random_state):
     X_train, X_test, y_train, y_test = split_train_test(df, random_state)
@@ -118,9 +121,9 @@ def main_xgb(df, df_h, df_a):
     df_h = df_h[xgb_features]
     df = df[xgb_features]
 
-    df_a = pd.get_dummies(df_a)
-    df_h = pd.get_dummies(df_h)
-    df = pd.get_dummies(df)
+    df_a = encode_categorical_columns(df_a)
+    df_h = encode_categorical_columns(df_h)
+    df = encode_categorical_columns(df)
 
     random_state = randint(1, 1000)
     print("===========================================")

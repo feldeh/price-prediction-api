@@ -58,7 +58,7 @@ def first_clean_data(df):
     df[num_col] = df[num_col].fillna(0)
 
     obj_col = ['heatingType', 'condition', 'kitchen']
-    df[obj_col] = df[obj_col].fillna('no_info')
+    df[obj_col] = df[obj_col].fillna('NO_INFO')
 
     df['saleType'] = df['saleType'].fillna('normalSale')
 
@@ -96,17 +96,6 @@ def iqr_outliers(df, col, upper_multiplier=1.5, lower_multiplier=1.5):
 def remove_outliers(df):
 
     df['pricePerSqm'] = df['price'] / df['netHabitableSurface']
-
-    # manual fine tuning of the multiplier
-    # df_h = df[df['type'] == 'HOUSE']
-    # df_h = iqr_outliers(df_h, 'price', 2, 0.6)
-    # df_h = iqr_outliers(df_h, 'pricePerSqm', 8, 1.5)
-    # df_h = iqr_outliers(df_h, 'netHabitableSurface', 10, 1.5)
-
-    # df_a = df[df['type'] == 'APARTMENT']
-    # df_a = iqr_outliers(df_a, 'price', 3, 1)
-    # df_a = iqr_outliers(df_a, 'pricePerSqm', 7, 1.5)
-    # df_a = iqr_outliers(df_a, 'pricePerSqm', 8, 1.5)
 
     df_h = df[df['type'] == 'HOUSE']
     df_h = iqr_outliers(df_h, 'price')
