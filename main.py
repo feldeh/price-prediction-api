@@ -1,4 +1,4 @@
-from src.data_cleaning import clean_data
+from utils.data_cleaning import clean_data
 from pathlib import Path
 import pandas as pd
 from src.model import *

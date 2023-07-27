@@ -67,6 +67,7 @@ def first_clean_data(df):
     # type casting
     float_col = ['postalCode', 'constructionYear']
     df[float_col] = df[float_col].astype('str')
+    df['constructionYear'] = df['constructionYear'].fillna('NO_INFO')
 
     boolean_col = ['hasLift', 'hasGarden', 'hasTerrace', 'fireplaceExists', 'hasSwimmingPool', 'hasAirConditioning', 'hasDoubleGlazing']
     df[boolean_col] = df[boolean_col].astype(int)
@@ -117,9 +118,6 @@ def remove_outliers(df):
 
 
 def clean_data(df):
-
-    # raw_data_path = Path.cwd() / "data" / "raw" / "properties_data.csv"
-    # df = pd.read_csv(raw_data_path)
 
     first_clean_df = first_clean_data(df)
     outlier_clean_df = remove_outliers(first_clean_df)
