@@ -1,0 +1,10 @@
+.DS_Store
+.dockerignore
+.git
+.gitignore
+Dockerfile
+*.md
+__pycache__
+*_env
+notebooks
+datasets
