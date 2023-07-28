@@ -6,12 +6,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import cross_val_score
-
 import xgboost as xgb
-import pickle
+import joblib
 
 from src.utils.data_cleaning import clean_data
-# from src.utils.preprocessing import preprocess_data
 
 
 def preprocess_data(X_train):
@@ -22,7 +20,7 @@ def preprocess_data(X_train):
 
     # categorical features transformer
     categorical_features = X_train.select_dtypes(include=['object']).columns
-    categorical_pipeline = Pipeline([('onehot', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_pipeline = Pipeline([('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=True))])
 
     transformer = ColumnTransformer(
         [("categorical_preprocessing", categorical_pipeline, categorical_features),
@@ -53,16 +51,17 @@ def eval_model(model, X, y):
     print(f"Mean accuracy score: {scores.mean():.2f}+/-{scores.std():.2f}")
 
 
-def train_model_main():
+def train_eval_save_model():
 
-    raw_data_path = Path.cwd() / "data" / "raw" / "properties_data.csv"
+    raw_data_path = Path.cwd() / "datasets" / "raw" / "properties_data.csv"
     df = pd.read_csv(raw_data_path)
     clean_df = clean_data(df)
 
     xgb_features = ['region', 'province', 'district', 'netHabitableSurface', 'bedroomCount',
                     'hasDoubleGlazing', 'condition', 'hasSwimmingPool', 'bathroomCount',
                     'showerRoomCount', 'parkingCountIndoor', 'hasGarden', 'gardenSurface',
-                    'hasTerrace', 'hasLift', 'kitchen', 'latitude', 'longitude', 'constructionYear']
+                    'hasTerrace', 'hasLift', 'kitchen', 'latitude', 'longitude'
+                    ]
 
     clean_df = clean_df[xgb_features + ['price']]
 
@@ -75,6 +74,10 @@ def train_model_main():
 
     eval_model(model, X, y)
 
+    model_path = Path.cwd() / "models" / "model.pkl"
+
+    joblib.dump(model, model_path)
+
 
 if __name__ == '__main__':
-    train_model_main()
+    train_eval_save_model()

@@ -7,7 +7,7 @@ def first_clean_data(df):
 
     print(f"Raw data shape: {df.shape}")
 
-    # replace values which contains only [.,-] characters with NaN
+    # replace 'number' values which contains only [.,-] characters with NaN
     df['number'].replace(r'^[.,-]+$', np.nan, regex=True, inplace=True)
     # remove trailing [.,-] characters
     df['number'].replace(r'[.,-]+$', '', regex=True, inplace=True)
@@ -40,6 +40,7 @@ def first_clean_data(df):
                    'viewCount',
                    'locality',
                    'facadeCount',
+                   'constructionYear'
                    ]
     df.drop(col_to_drop, axis=1, inplace=True)
 
@@ -65,9 +66,8 @@ def first_clean_data(df):
     df['subtype'] = df['subtype'].fillna(df['type'])
 
     # type casting
-    float_col = ['postalCode', 'constructionYear']
-    df[float_col] = df[float_col].astype('str')
-    df['constructionYear'] = df['constructionYear'].fillna('NO_INFO')
+
+    df['postalCode'] = df['postalCode'].astype('str')
 
     boolean_col = ['hasLift', 'hasGarden', 'hasTerrace', 'fireplaceExists', 'hasSwimmingPool', 'hasAirConditioning', 'hasDoubleGlazing']
     df[boolean_col] = df[boolean_col].astype(int)
@@ -122,7 +122,7 @@ def clean_data(df):
     first_clean_df = first_clean_data(df)
     outlier_clean_df = remove_outliers(first_clean_df)
 
-    outlier_clean_df.to_csv(Path.cwd() / "data" / "clean" / "clean_data.csv", index=False)
-    outlier_clean_df.to_pickle(Path.cwd() / "data" / "clean" / "clean_data.pkl")
+    outlier_clean_df.to_csv(Path.cwd() / "datasets" / "clean" / "clean_data.csv", index=False)
+    outlier_clean_df.to_pickle(Path.cwd() / "datasets" / "clean" / "clean_data.pkl")
 
     return outlier_clean_df
