@@ -88,15 +88,15 @@ class Property(BaseModel):
     province: BelgianProvinces
     district: BelgianDistricts = None
     netHabitableSurface: confloat(gt=10, le=5000)
-    bedroomCount: conint(gt=0, le=10)
+    bedroomCount: conint(le=10)
     hasDoubleGlazing: bool = None
     condition: PropertyState = 'NO_INFO'
-    hasSwimmingPool: bool
-    bathroomCount: conint(gt=0, le=10)
-    showerRoomCount: conint(gt=0, le=10)
-    parkingCountIndoor: conint(gt=0, le=10)
+    hasSwimmingPool: bool = None
+    bathroomCount: conint(le=10)
+    showerRoomCount: conint(le=10) = None
+    parkingCountIndoor: conint(le=10) = None
     hasGarden: bool
-    gardenSurface: confloat(gt=10, le=5000)
+    gardenSurface: float
     hasTerrace: bool
     hasLift: bool = None
     kitchen: KitchenState = 'NO_INFO'
